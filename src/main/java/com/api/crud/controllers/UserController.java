@@ -67,6 +67,9 @@ public class UserController {
         if (userModelOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
         }
+        if (!userModelOptional.get().getEmail().equals(email) && userService.existsByEmail(userDto.getEmail())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("This email is not available");
+        }
         var userModel = new UserModel();
         BeanUtils.copyProperties(userDto, userModel);
         userModel.setId(userModelOptional.get().getId());
